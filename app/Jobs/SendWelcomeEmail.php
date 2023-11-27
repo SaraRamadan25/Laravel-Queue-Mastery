@@ -12,7 +12,11 @@ use Illuminate\Queue\SerializesModels;
 class SendWelcomeEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+/*    public $timeout = 1;*/
+/*    public $tries = 3;*/
+    public $tries = -1;
+    // wait 2 seconds before retrying the job
+    public $backoff = 2;
     /**
      * Create a new job instance.
      */
@@ -26,6 +30,12 @@ class SendWelcomeEmail implements ShouldQueue
      */
     public function handle(): void
     {
+        throw new \Exception('Something went wrong');
         sleep(3);
     }
+    public function retryUntil(): \DateTime
+    {
+        return now()->addSeconds(5);
+    }
+
 }

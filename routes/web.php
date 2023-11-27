@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    // we can delay the job by calling the delay() method on the job instance
     SendWelcomeEmail::dispatch();
     return view('welcome');
 });
