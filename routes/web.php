@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\ProcessPayment;
 use App\Jobs\SendWelcomeEmail;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // we can delay the job by calling the delay() method on the job instance
-    SendWelcomeEmail::dispatch();
+    foreach (range(1, 10) as $i) {
+        SendWelcomeEmail::dispatch();
+    }
+    ProcessPayment::dispatch()->onQueue('payments');
+
     return view('welcome');
 });
