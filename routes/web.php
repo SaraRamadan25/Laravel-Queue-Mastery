@@ -4,6 +4,7 @@ use App\Jobs\Deploy;
 use App\Jobs\ProcessPayment;
 use App\Jobs\PullRepo;
 use App\Jobs\runTests;
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,17 @@ Route::get('/', function () {
     //first type : chaining
     //second type : batches
     $batch = [
+        [
         new PullRepo('laracasts/project1'),
+        new PullRepo('laracasts/project1'),
+        new PullRepo('laracasts/project1')
+        ],
+    [
         new PullRepo('laracasts/project2'),
-        new PullRepo('laracasts/project3'),
-        ];
+        new PullRepo('laracasts/project2'),
+        new PullRepo('laracasts/project2')
+    ]
+];
 
     Bus::batch($batch)
         ->allowFailures()
