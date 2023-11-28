@@ -20,24 +20,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    //first type : chaining
-    //second type : batches
-    $batch = [
-        [
-        new PullRepo('laracasts/project1'),
-        new PullRepo('laracasts/project1'),
-        new PullRepo('laracasts/project1')
-        ],
-    [
-        new PullRepo('laracasts/project2'),
-        new PullRepo('laracasts/project2'),
-        new PullRepo('laracasts/project2')
-    ]
-];
-
-    Bus::batch($batch)
-        ->allowFailures()
-        ->dispatch();
-
+Bus::chain([
+    new Deploy(),
+    function (){
+    Bus::batch([...])->dispatch();
+    }
+])->dispatch();
     return view('welcome');
 });
