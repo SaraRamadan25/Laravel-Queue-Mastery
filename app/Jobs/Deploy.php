@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,9 +13,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
-class Deploy implements ShouldQueue
+class Deploy implements ShouldQueue, ShouldBeUniqueUntilProcessing
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels ;
 
     /**
      * Create a new job instance.
@@ -33,12 +34,21 @@ class Deploy implements ShouldQueue
                 sleep(5);
                 info('Deployed!');
             }
-            public function middleware(): array
+            public function uniqueId(): string
+            {
+                return 'deployments';
+            }
+
+            public function uniqueFor(): int
+            {
+                return 60;
+            }
+         /*   public function middleware(): array
             {
                 // will prevent the job from running if another job with the same signature is currently running.
                 // however if the job fails, will release the job back to the queue, it won't block.
                 return [
                     new WithoutOverlapping('deployments', 10),
                 ];
-            }
+            }*/
 }
