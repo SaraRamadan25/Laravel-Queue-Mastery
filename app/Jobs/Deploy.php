@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class Deploy implements ShouldQueue
 {
@@ -27,10 +28,13 @@ class Deploy implements ShouldQueue
      */
     public function handle(): void
     {
-        Cache::lock('deployments')->block(10, function () {
-            info('Deploying the application');
-            sleep(5);
-            info('Application deployed successfully');
-        });
-    }
+        Redis::funnel('deployments')
+            ->limit(5)
+            ->block(10)
+            ->then(function () {
+                info('Deploying...');
+                sleep(5);
+                info('Deployed!');
+                });
+            }
 }
