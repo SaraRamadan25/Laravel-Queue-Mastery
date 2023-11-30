@@ -19,12 +19,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', function () {
-Bus::chain([
-    new Deploy(),
-    function (){
-    Bus::batch([...])->dispatch();
-    }
-])->dispatch();
+    Deploy::dispatch();
+
     return view('welcome');
 });
+
