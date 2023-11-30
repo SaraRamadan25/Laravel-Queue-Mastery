@@ -27,8 +27,10 @@ class Deploy implements ShouldQueue
      */
     public function handle(): void
     {
+        Cache::lock('deployments')->block(10, function () {
             info('Deploying the application');
             sleep(5);
             info('Application deployed successfully');
+        });
     }
 }
