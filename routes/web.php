@@ -4,6 +4,7 @@ use App\Jobs\Deploy;
 use App\Jobs\ProcessPayment;
 use App\Jobs\PullRepo;
 use App\Jobs\runTests;
+use App\Models\User;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
@@ -22,8 +23,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    Deploy::dispatch();
 
+   /* \Illuminate\Support\Facades\DB::transaction(function () {
+    $user = User::factory()->create();
+    \App\Jobs\SendWelcomeEmail::dispatch($user)->afterCommit();
+    });*/
+
+    \App\Jobs\TestJob::dispatch('this is a secret');
     return view('welcome');
 });
 
